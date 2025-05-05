@@ -19,17 +19,37 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
       context: context,
       builder: (context) => AlertDialog(
         contentPadding: EdgeInsets.all(20),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            QrImageView(data: _urlController.text, size: 200),
-            SizedBox(height: 20),
-            Text(
-              _urlController.text,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
-            ),
-          ],
+        content: Container(
+          width: 300, // Fixed width for the dialog
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 200,
+                height: 200,
+                child: QrImageView(
+                  data: _urlController.text,
+                  size: 200,
+                  version: QrVersions.auto,
+                  gapless: false,
+                  errorStateBuilder: (context, error) {
+                    return Center(
+                      child: Text(
+                        'Error generating QR code: $error',
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                _urlController.text,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
