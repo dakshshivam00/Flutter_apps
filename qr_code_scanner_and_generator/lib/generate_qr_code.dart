@@ -11,6 +11,36 @@ class GenerateQrCode extends StatefulWidget {
 
 class _GenerateQrCodeState extends State<GenerateQrCode> {
   TextEditingController _urlController = TextEditingController();
+
+  void _showQRDialog() {
+    if (_urlController.text.isEmpty) return;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        contentPadding: EdgeInsets.all(20),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            QrImageView(data: _urlController.text, size: 200),
+            SizedBox(height: 20),
+            Text(
+              _urlController.text,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Back'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,18 +52,13 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              if (_urlController.text.isNotEmpty)
-                QrImageView(data: _urlController.text, size: 200),
               CustomTextField(
-                text: 'Enter info',
+                text: 'Enter your data',
                 urlController: _urlController,
               ),
               SizedBox(height: 20),
               Button(
-                onTap: () {
-                  setState(() {});
-                  print('share');
-                },
+                onTap: _showQRDialog,
                 text: 'Generate QR',
               ),
             ],
